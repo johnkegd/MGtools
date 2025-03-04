@@ -1,5 +1,7 @@
-import hubspot from '@hubspot/api-client';
+const hubspot = require('@hubspot/api-client');
 import dotenv from 'dotenv';
+
+console. log ('HubSpot module:', hubspot);
 
 export const config = {
   path: '/verify-quote',
@@ -17,7 +19,6 @@ function getEnvVariable(key) {
   // Use process.env in local development
   return process.env[key] || '';
 }
-
  // Initialize HubSpot client with environment variable
  const hubspotClient = new hubspot.Client({
   accessToken: getEnvVariable('HUBSPOT_API_KEY'),
