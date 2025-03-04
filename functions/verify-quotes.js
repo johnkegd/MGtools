@@ -18,6 +18,11 @@ function getEnvVariable(key) {
   return process.env[key] || '';
 }
 
+ // Initialize HubSpot client with environment variable
+ const hubspotClient = new hubspot.Client({
+  accessToken: getEnvVariable('HUBSPOT_API_KEY'),
+});
+
 const ASSOCIATIONS = ['contact', 'company'];
 
 const handler = async (req, context) => {
@@ -34,11 +39,6 @@ const handler = async (req, context) => {
         headers: { 'Content-Type': 'application/json' },
       });
     }
-
-    // Initialize HubSpot client with environment variable
-    const hubspotClient = new hubspot.Client({
-      accessToken: getEnvVariable('HUBSPOT_API_KEY'),
-    });
 
     // Fetch quote details from HubSpot
     const quoteApiResponse = await hubspotClient.crm.quotes.basicApi.getById(
