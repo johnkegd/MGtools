@@ -28,16 +28,16 @@ const ASSOCIATIONS = ['contact', 'company'];
 
 const handler = async (req, context) => {
   try {
-    console.log("NETLIFY HANDLER");
     // Extract query parameters
     const url = new URL(req.url);
     const quoteId = url.searchParams.get('quoteId');
 
     // Validate quoteId
     if (!quoteId) {
-      return new Response(JSON.stringify({ error: 'Missing quoteId parameter' }), {
-        status: 400,
-        headers: { 'Content-Type': 'application/json' },
+      console.error("Missing quoteId parameter");
+      return new Response(null, {
+        status: 301,
+        headers: { Location: getEnvVariable('REDIRECT_BASE_URL') },
       });
     }
 
@@ -53,9 +53,10 @@ const handler = async (req, context) => {
 
     // Validate quote response
     if (!quoteApiResponse) {
-      return new Response(JSON.stringify({ message: `No quote found with id: ${quoteId}` }), {
-        status: 404,
-        headers: { 'Content-Type': 'application/json' },
+      console.log(`No quote found with id: ${quoteId}`);
+      return new Response(null, {
+        status: 301,
+        headers: { Location: getEnvVariable('REDIRECT_BASE_URL') },
       });
     }
 
@@ -96,15 +97,14 @@ const handler = async (req, context) => {
 
     // Redirect to the desired URL
     return new Response(null, {
-      status: 302,
+      status: 301,
       headers: { Location: redirectUrl },
     });
   } catch (error) {
     console.error('Error in Netlify function:', error);
-
-    return new Response(JSON.stringify({ message: error.message || 'Internal Server Error' }), {
-      status: 500,
-      headers: { 'Content-Type': 'application/json' },
+    return new Response(null, {
+      status: 301,
+      headers: { Location: getEnvVariable('REDIRECT_BASE_URL') },
     });
   }
 };
